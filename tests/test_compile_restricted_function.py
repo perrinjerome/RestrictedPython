@@ -9,7 +9,7 @@ from types import FunctionType
 def test_compile_restricted_function():
     p = ''
     body = """
-print("Hello World!")
+print("Hello", "World!")
 return printed
 """
     name = "hello_world"

@@ -3,6 +3,7 @@ from RestrictedPython._compat import IS_CPYTHON
 from RestrictedPython._compat import IS_PY2
 from RestrictedPython.transformer import RestrictingNodeTransformer
 
+import __future__
 import ast
 import warnings
 
@@ -134,7 +135,7 @@ def compile_restricted_function(
         name,
         filename='<string>',
         globalize=None,  # List of globals (e.g. ['here', 'context', ...])
-        flags=0,
+        flags=__future__.print_function.compiler_flag,
         dont_inherit=False,
         policy=RestrictingNodeTransformer):
     """Compile a restricted code object for a function.
@@ -144,7 +145,7 @@ def compile_restricted_function(
     """
     # Parse the parameters and body, then combine them.
     try:
-        body_ast = ast.parse(body, '<func code>', 'exec')
+        body_ast = compile(body, '<func code>', 'exec', ast.PyCF_ONLY_AST | flags, dont_inherit)
     except SyntaxError as v:
         error = syntax_error_template.format(
             lineno=v.lineno,
